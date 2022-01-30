@@ -1,20 +1,17 @@
 package se.Lexicon.model;
+import se.Lexicon.Sequencers.PersonIdSequencer;
+import se.Lexicon.Sequencers.TodoItemTaskIdSequencer;
 
 import java.util.Objects;
 
 public class TodoItemTask {
-    private static int total;
-
-    //fields
     private int id ;
     private boolean assigned;
     private TodoItem todoItem;
     private Person assignee;
 
     public TodoItemTask(TodoItem todoItem, Person assignee){
-        // increment the "total" and set the new id automatically
-        total++;
-        this.id = total;
+        this.id = TodoItemTaskIdSequencer.nextId();
 
         setTodoItem(todoItem);
         setAssignee(assignee);

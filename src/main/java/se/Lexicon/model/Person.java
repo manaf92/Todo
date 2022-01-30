@@ -1,13 +1,11 @@
 package se.Lexicon.model;
 
+import se.Lexicon.Sequencers.PersonIdSequencer;
 import se.Lexicon.security.*;
 
 import java.util.Objects;
 
 public class Person {
-
-    private static int total;
-
     //fields
     private int  id;
     private String firstName;
@@ -17,9 +15,7 @@ public class Person {
 
     public Person(String firstName, String lastName, String email, AppUser credential) {
         // increment the id and set it automatically
-        total++;
-        this.id = total;
-
+        this.id = PersonIdSequencer.nextId();
         setFirstName(firstName);
         setLastName(lastName);
         setEmail(email);

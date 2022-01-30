@@ -1,10 +1,11 @@
 package se.Lexicon.model;
+import se.Lexicon.Sequencers.PersonIdSequencer;
+import se.Lexicon.Sequencers.TodoItemIdSequencer;
 
 import java.time.*;
 import java.util.Objects;
 
 public class TodoItem {
-    private static int total;
     private int id;
     private String title;
     private String taskDescription;
@@ -13,9 +14,7 @@ public class TodoItem {
     private Person creator;
 
     public TodoItem(String title, String taskDescription, LocalDate deadLine, boolean done, Person creator) {
-        // increment the id and set it automatically
-        total++;
-        this.id = total;
+        this.id = TodoItemIdSequencer.nextId();
 
         setTitle(title);
         setTaskDescription(taskDescription);
