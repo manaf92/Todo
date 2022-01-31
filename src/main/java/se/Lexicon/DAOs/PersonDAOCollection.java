@@ -1,40 +1,69 @@
 package se.Lexicon.DAOs;
 
 import se.Lexicon.model.Person;
+import se.Lexicon.security.AppUser;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class PersonDAOCollection implements PersonDAO{
 
-    Collection<Person> persons = new ArrayList<>();
+    private Collection<Person> persons;
+
+
+    // Singleton
+    public static PersonDAOCollection INSTANCE;
+
+    public static PersonDAOCollection getInstance(){
+        if (INSTANCE==null) INSTANCE = new PersonDAOCollection();
+        return INSTANCE;
+    }
+
+    public static PersonDAOCollection getTestInstance(List<Person> persons){
+        return new PersonDAOCollection(persons);
+    }
+
+    private PersonDAOCollection() {
+        this.persons = new ArrayList<>();
+    }
+
+
+    private PersonDAOCollection(Collection<Person> persons) {
+        this.persons = persons;
+    }
+
+
+
+
+
     @Override
-    public Object persist(Object person) {
-        return persons.add((Person) person)? person : null;
+    public Person persist(Person person) {
+        return persons.add( person)? person : null;
     }
 
     @Override
-    public Object findById(Object id) {
+    public Person findById(Integer id) {
         return persons.stream()
-                .filter(a-> a.getId()==(int)id)
+                .filter(a-> a.getId()==id)
                 .findFirst()
                 .get();
     }
 
     @Override
-    public Collection findAll() {
+    public Collection<Person> findAll() {
         return new ArrayList<>(persons);
     }
 
     @Override
-    public void remove(Object id) {
-        persons.removeIf(p->p.getId()==(int)id);
+    public void remove(Integer id) {
+        persons.removeIf(p->p.getId()==id);
     }
 
     @Override
-    public Object findByEmail(Object email) {
+    public Person findByEmail(String email) {
         return persons.stream()
-                .filter(a-> a.getEmail().equals((String) email))
+                .filter(a-> a.getEmail().equals(email))
                 .findFirst()
                 .get();
     }

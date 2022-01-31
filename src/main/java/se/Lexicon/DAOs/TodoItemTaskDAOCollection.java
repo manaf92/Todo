@@ -1,90 +1,80 @@
 package se.Lexicon.DAOs;
 
-import se.Lexicon.model.Person;
+import se.Lexicon.model.TodoItem;
 import se.Lexicon.model.TodoItemTask;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
-public class TodoItemTaskDAOCollection implements TodoItemTaskDAO{
+public class TodoItemTaskDAOCollection implements TodoItemTaskDAO {
 
-    Collection<TodoItemTask> todoItemTasks= new ArrayList<>();
+    // Singleton
+
+    private final Collection<TodoItemTask> todoItemTasks;
+    public static TodoItemTaskDAOCollection INSTANCE;
+
+    // empty constructor
+    private TodoItemTaskDAOCollection() {
+        this.todoItemTasks = new ArrayList<>();
+    }
+
+    // constructor with list of TodoItemTask
+    private TodoItemTaskDAOCollection(Collection<TodoItemTask> todoItemTasks) {
+        this.todoItemTasks = todoItemTasks;
+    }
+
+    public static TodoItemTaskDAOCollection getInstance(){
+        if (INSTANCE==null) INSTANCE = new TodoItemTaskDAOCollection();
+        return INSTANCE;
+    }
+
+    public static TodoItemTaskDAOCollection getTestInstance(List<TodoItemTask> todoItemTasks){
+        return new TodoItemTaskDAOCollection(todoItemTasks);
+    }
+    // end Singleton
+
+
+
+
 
     @Override
-    public Object persist(Object o) {
-        return todoItemTasks.add((TodoItemTask) o) ? o:null;
+    public TodoItemTask persist(TodoItemTask todoItemTask) {
+        todoItemTasks.add(todoItemTask);
+        return todoItemTask;
     }
 
     @Override
-    public Object findById(Object id) {
+    public TodoItemTask findById(Integer id) {
         return todoItemTasks.stream()
                 .filter(t->t.getId()==(int)id).findFirst().get();
     }
 
     @Override
-    public Collection findAll() {
+    public List<TodoItemTask> findAll() {
         return new ArrayList(todoItemTasks);
     }
 
     @Override
-    public Collection findByAssignedStatus(Object status) {
+    public List<TodoItemTask> findByAssignedStatus(Boolean status) {
         return todoItemTasks.stream()
-                .filter(t->t.isAssigned()==(Boolean) status)
+                .filter(t->t.isAssigned()== status)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
-    public Collection findByPersonId(Object personId) {
+    public List<TodoItemTask> findByPersonId(Integer personId) {
         return todoItemTasks.stream()
-                .filter(t->t.getId()==(int) personId)
+                .filter(t->t.getId()== personId)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
-    public void remove(Object id) {
-        todoItemTasks.removeIf(t->t.getId()==(int)id);
+    public void remove(Integer id) {
+        todoItemTasks.removeIf(t->t.getId()==id);
     }
 
 
     // Non-Generic Way
-    /*
-
-    @Override
-    public TodoItemTask persist(TodoItemTask todoItemTask) {
-        return todoItemTasks.add(todoItemTask) ? todoItemTask:null;
-    }
-
-    @Override
-    public TodoItemTask findById(int id) {
-        return todoItemTasks.stream()
-                .filter(t->t.getId()==id)
-                .findFirst().get();
-    }
-
-    @Override
-    public Collection<TodoItemTask> findAll() {
-        return new ArrayList<>(todoItemTasks);
-    }
-
-    @Override
-    public Collection<TodoItemTask> findByAssignedStatus(boolean status) {
-        return todoItemTasks.stream()
-                .filter(TodoItemTask::isAssigned)
-                .collect(Collectors.toCollection(ArrayList::new));
-    }
-
-    @Override
-    public Collection<TodoItemTask> findByPersonId(int personId) {
-        return todoItemTasks.stream()
-                .filter(t->t.getAssignee().getId()==personId).
-                collect(Collectors.toCollection(ArrayList::new));
-    }
-
-    @Override
-    public void remove(int id) {
-        todoItemTasks.removeIf(t->t.getId()==id);
-    }
-
-    */
 }

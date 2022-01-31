@@ -5,14 +5,13 @@ import se.Lexicon.model.TodoItem;
 import java.time.LocalDate;
 import java.util.Collection;
 
-public interface TodoItemDAO<T,P> extends DAO {
+public interface TodoItemDAO extends GenericDao<TodoItem,Integer> {
 
-    T findById(P p);
-    Collection<T> findAllByDoneStatus ( P p);
-    Collection<T> findByTitleContains (P p);
-    Collection<T> findByPersonId ( P p);
-    Collection<T> findByDeadlineBefore (P p);
-    Collection<T> findByDeadlineAfter (P p);
+    Collection<TodoItem> findAllByDoneStatus ( Boolean status);
+    Collection<TodoItem> findByTitleContains (String title);
+    Collection<TodoItem> findByPersonId ( Integer personId);
+    Collection<TodoItem> findByDeadlineBefore (LocalDate date);
+    Collection<TodoItem> findByDeadlineAfter (LocalDate date);
 
     // Non-Generic Way
     /*

@@ -1,84 +1,52 @@
 package se.Lexicon.DAOs;
 
+import se.Lexicon.model.Person;
 import se.Lexicon.model.TodoItem;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class TodoItemDAOCollection implements TodoItemDAO{
-    Collection<TodoItem> todoItems = new ArrayList<>();
 
-    @Override
-    public Object persist(Object todoItem) {
-        return todoItems.add((TodoItem) todoItem)? todoItem:null;
-    }
 
-    @Override
-    public Object findById(Object id) {
-        return todoItems.stream()
-                .filter(t->t.getId()==(int) id)
-                .findFirst().get();
-    }
+    // Singleton
 
-    @Override
-    public Collection findAll() {
-        return new ArrayList<>(todoItems);
-    }
+    private final Collection<TodoItem> todoItems;
+    public static TodoItemDAOCollection INSTANCE;
 
-    @Override
-    public Collection findAllByDoneStatus(Object done) {
-        return todoItems.stream()
-                .filter(t->t.isDone()==(Boolean)done)
-                .collect(Collectors.toCollection(ArrayList::new));
-    }
-
-    @Override
-    public Collection findByTitleContains(Object title) {
-        return todoItems.stream()
-                .filter(t->t.getTitle().equals((String)title))
-                .collect(Collectors.toCollection(ArrayList::new));
-    }
-
-    @Override
-    public Collection findByPersonId(Object personId) {
-        return todoItems.stream()
-                .filter(t->t.getCreator().getId()==(int)personId)
-                .collect(Collectors.toCollection(ArrayList::new));
-    }
-
-    @Override
-    public Collection findByDeadlineBefore(Object date) {
-        return todoItems.stream()
-                .filter(t->t.getDeadLine().isAfter((LocalDate)date))
-                .collect(Collectors.toCollection(ArrayList::new));
-    }
-
-    @Override
-    public Collection findByDeadlineAfter(Object date) {
-        return todoItems.stream()
-                .filter(t->t.getDeadLine().isBefore((LocalDate)date))
-                .collect(Collectors.toCollection(ArrayList::new));
-    }
-
-    @Override
-    public void remove(Object id) {
-        todoItems.removeIf(t->t.getId()==(int)id);
+    private TodoItemDAOCollection() {
+        this.todoItems = new ArrayList<>();
     }
 
 
-    // Non-Generic Way
-    /*
+    private TodoItemDAOCollection(Collection<TodoItem> todoItems) {
+        this.todoItems = todoItems;
+    }
+
+    public static TodoItemDAOCollection getInstance(){
+        if (INSTANCE==null) INSTANCE = new TodoItemDAOCollection();
+        return INSTANCE;
+    }
+
+    public static TodoItemDAOCollection getTestInstance(List<TodoItem> todoItems){
+        return new TodoItemDAOCollection(todoItems);
+    }
+    // end Singleton
+
+
 
     @Override
     public TodoItem persist(TodoItem todoItem) {
-        return todoItems.add(todoItem)? todoItem:null;
+        return todoItems.add(todoItem)? todoItem : null;
     }
 
     @Override
-    public TodoItem findById(int id) {
+    public TodoItem findById(Integer id) {
         return todoItems.stream()
+                .filter(t->t.getId()== id)
                 .findFirst().get();
     }
 
@@ -88,21 +56,21 @@ public class TodoItemDAOCollection implements TodoItemDAO{
     }
 
     @Override
-    public Collection<TodoItem> findAllByDoneStatus(boolean done) {
+    public Collection<TodoItem> findAllByDoneStatus(Boolean done) {
         return todoItems.stream()
-                .filter(TodoItem::isDone)
+                .filter(t->t.isDone()==done)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
     public Collection<TodoItem> findByTitleContains(String title) {
         return todoItems.stream()
-                .filter(t->t.getTitle().equals(title))
+                .filter(t->t.getTitle().contains(title))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
-    public Collection<TodoItem> findByPersonId(int personId) {
+    public Collection<TodoItem> findByPersonId(Integer personId) {
         return todoItems.stream()
                 .filter(t->t.getCreator().getId()==personId)
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -111,21 +79,22 @@ public class TodoItemDAOCollection implements TodoItemDAO{
     @Override
     public Collection<TodoItem> findByDeadlineBefore(LocalDate date) {
         return todoItems.stream()
-                .filter(t->t.getDeadLine().isAfter(date))
+                .filter(t-> !t.getDeadLine().isAfter(date))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
     public Collection<TodoItem> findByDeadlineAfter(LocalDate date) {
         return todoItems.stream()
-                .filter(t->t.getDeadLine().isBefore(date))
+                .filter(t-> !t.getDeadLine().isBefore(date))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
-    public void remove(int id) {
+    public void remove(Integer id) {
         todoItems.removeIf(t->t.getId()==id);
     }
 
-    */
+
+    // Non-Generic Way
 }

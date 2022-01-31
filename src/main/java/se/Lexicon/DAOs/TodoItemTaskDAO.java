@@ -1,14 +1,13 @@
 package se.Lexicon.DAOs;
 
+import se.Lexicon.model.TodoItem;
 import se.Lexicon.model.TodoItemTask;
 
 import java.util.Collection;
 
-public interface TodoItemTaskDAO<T,P> extends DAO {
-
-    T findById(P p);
-    Collection<T> findByAssignedStatus(P p);
-    Collection<T> findByPersonId(P p);
+public interface TodoItemTaskDAO extends GenericDao<TodoItemTask,Integer> {
+    Collection<TodoItemTask> findByAssignedStatus(Boolean assignedStatus);
+    Collection<TodoItemTask> findByPersonId(Integer personId);
 
     // Non-Generic Way
     /*

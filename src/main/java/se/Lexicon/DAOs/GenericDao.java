@@ -2,8 +2,9 @@ package se.Lexicon.DAOs;
 
 import java.util.Collection;
 
-public interface DAO<T,P> {
+public interface GenericDao<T,ID> {
     T persist(T t);
+    T findById(ID id);
     Collection<T> findAll();
-    void remove(P p);
+    void remove(ID id);
 }
